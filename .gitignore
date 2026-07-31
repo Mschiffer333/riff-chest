@@ -1,0 +1,22 @@
+# Node
+node_modules/
+
+# Environment
+.env
+
+# Logs
+*.log
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# VS Code
+.vscode/
+
+# React Native
+android/.gradle/
+android/app/build/
+ios/build/
