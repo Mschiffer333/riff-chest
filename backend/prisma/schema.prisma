@@ -1,0 +1,60 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Guitar {
+  id  String @id @default(uuid())
+  brand String
+  model String
+  numberStrings Int
+
+  songs Song[]
+}
+
+
+model Tuning {
+  id  String  @id @default(uuid())
+  name  String
+  numberStrings Int
+  notes  String
+
+  songs Song[]
+}
+
+model Genre {
+  id  String @id  @default(uuid())
+  name  String  @unique
+
+  songs Song[]
+}
+
+model Song{
+  id  String @id  @default(uuid())
+
+  title String
+  artist  String
+  difficulty  Int
+  mastered  Boolean @default(false)
+  masteryLevel  Int @default(0)
+  favorite  Boolean @default(false)
+  lasPracticed  DateTime?
+  guitarId  String
+  tuningId  String
+  genreId String
+  guitar  Guitar  @relation(fields: [guitarId], references: [id])
+  tuning  Tuning  @relation(fields: [tuningId], references: [id])
+  genre Genre @relation(fields: [genreId], references: [id])
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  @@index([artist])
+}
