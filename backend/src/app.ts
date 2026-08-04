@@ -1,4 +1,5 @@
 import express from 'express';
+import tuningRoutes from './routes/tuning.routes.js'
 
 const app = express();
 
@@ -11,5 +12,7 @@ app.get('/', (_req, res) => {
     status: 'running',
   });
 });
+
+app.use('/api/tunings', tuningRoutes);
 
 export default app;

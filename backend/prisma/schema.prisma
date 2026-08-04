@@ -1,15 +1,10 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model Guitar {
@@ -24,7 +19,7 @@ model Guitar {
 
 model Tuning {
   id  String  @id @default(uuid())
-  name  String
+  name  String @unique
   numberStrings Int
   notes  String
 
@@ -47,7 +42,7 @@ model Song{
   mastered  Boolean @default(false)
   masteryLevel  Int @default(0)
   favorite  Boolean @default(false)
-  lasPracticed  DateTime?
+  lastPracticed  DateTime?
   guitarId  String
   tuningId  String
   genreId String
