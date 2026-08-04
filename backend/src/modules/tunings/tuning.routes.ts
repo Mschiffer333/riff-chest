@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { TuningController } from '../controllers/tuning.controllers.ts';
+import { TuningController } from './tuning.controllers.js';
 
 const router = Router();
 const tuningController = new TuningController();

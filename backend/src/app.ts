@@ -1,5 +1,6 @@
 import express from 'express';
-import tuningRoutes from './routes/tuning.routes.js'
+import tuningRoutes from './modules/tunings/tuning.routes.js'
+import { errorHandler } from './shared/middlewares/error-handler.middleware.js';
 
 const app = express();
 
@@ -14,5 +15,6 @@ app.get('/', (_req, res) => {
 });
 
 app.use('/api/tunings', tuningRoutes);
+app.use(errorHandler);
 
 export default app;
