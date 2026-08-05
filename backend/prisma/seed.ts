@@ -70,6 +70,34 @@ const tunings = [
     },
 ]
 
+const guitars = [
+    {
+        brand: 'Jackson',
+        model: 'Dinky X Series DKAF8',
+        numberStrings: 7,
+    },
+    {
+        brand: 'Fender',
+        model: 'Stratocaster',
+        numberStrings: 6,
+    },
+    {
+        brand: 'Fender Classic Design',
+        model: 'CD Series',
+        numberStrings: 6,
+    },
+    {
+        brand: 'Lyon by Washburn',
+        model: 'Li15',
+        numberStrings: 6,
+    },
+    {
+        brand: 'Yamaha',
+        model: 'C40',
+        numberStrings: 6,
+    },
+]
+
 async function main() {
     for (const genre of genres) {
         await prisma.genre.upsert({
@@ -91,6 +119,19 @@ async function main() {
             update: {},
             create: tuning,
         });
+    }
+
+    for (const guitar of guitars) {
+        await prisma.guitar.upsert({
+            where: {
+                brand_model: {
+                    brand: guitar.brand,
+                    model: guitar.model
+                },
+            },
+            update: {},
+            create: guitar
+        })
     }
 }
 
