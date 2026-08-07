@@ -1,3 +1,6 @@
+import { z } from 'zod';
+import { filterSongsSchema } from './song.schema.js';
+
 export interface SongResponseDto {
     id: string;
     title: string;
@@ -28,3 +31,16 @@ export interface SongResponseDto {
     createdAt: Date;
     updatedAt: Date;
 }
+
+export interface SongListResponseDto {
+    data: SongResponseDto[];
+
+    pagination: {
+        page: number;
+        limit: number;
+        total: number;
+        totalPages: number;
+    };
+}
+
+export type SongFiltersDto = z.infer<typeof filterSongsSchema>;

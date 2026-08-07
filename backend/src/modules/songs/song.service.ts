@@ -1,7 +1,7 @@
 import { SongRepository } from "./song.repository.js";
 import { NotFoundError } from "../../shared/errors/not-found-error.js";
 import type { Prisma } from '@prisma/client';
-import type { SongResponseDto } from "./song.dto.js";
+import type { SongFiltersDto, SongResponseDto, SongListResponseDto } from "./song.dto.js";
 import type { CreateSongDto } from "./song.schema.js";
 
 type SongWithRelations = Prisma.SongGetPayload<{
@@ -25,9 +25,18 @@ export class SongService {
     return this.toSongResponseDto(song);
   }
 
-  async getAll(): Promise<SongResponseDto[]> {
-    const songs = await this.repository.findAll();
-    return songs.map((song: SongWithRelations) => this.toSongResponseDto(song));
+  async getAll(filters: SongFiltersDto): Promise<SongListResponseDto> {
+    const result = await this.repository.findAll(filters);
+
+    return {
+      data: result.songs.map((song) => this.toSongResponseDto(song)),
+      pagination: {
+        page: filters.page,
+        limit: filters.limit,
+        total: result.total,
+        totalPages: Math.ceil(result.total / filters.limit),
+      },
+    };
   }
 
   async getById(id: string): Promise<SongResponseDto> {

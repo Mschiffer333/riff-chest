@@ -1,5 +1,7 @@
 import { prisma } from '../../shared/lib/prisma.js';
 import type { CreateSongDto } from './song.schema.js';
+import type { Prisma } from '@prisma/client';
+import type { SongFiltersDto } from './song.dto.js';
 
 export class SongRepository {
   async create(data: CreateSongDto & { mastered: boolean }) {
@@ -13,17 +15,46 @@ export class SongRepository {
     });
   }
 
-  async findAll() {
-    return prisma.song.findMany({
+  async findAll(filters: SongFiltersDto) {
+    const where: Prisma.SongWhereInput = {}
+    const skip = (filters.page - 1) * filters.limit;
+    if(filters.artist) {
+      where.artist = {
+        contains: filters.artist,
+        mode: 'insensitive'
+      };
+    }
+    if(filters.title) {
+      where.title = {
+        contains: filters.title,
+        mode: 'insensitive'
+      }
+    }
+
+    const total = await prisma.song.count({
+      where,
+    });
+
+    const orderBy = {
+      [filters.sort]: filters.order
+    }
+
+    const songs =await prisma.song.findMany({
+      where,
+      skip,
+      take: filters.limit,
       include: {
         guitar: true,
         tuning: true,
         genre: true
       },
-      orderBy: {
-        createdAt: 'desc'
-      }
-    })
+      orderBy
+    });
+
+    return {
+      songs,
+      total
+    }
   }
 
   async findById(id: string) {
